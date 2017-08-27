@@ -1,2 +1,2 @@
-model_checkpoint_path: "/home/paperspace/Driverless_Car/Current_Model/model.ckpt"
-all_model_checkpoint_paths: "/home/paperspace/Driverless_Car/Current_Model/model.ckpt"
+model_checkpoint_path: "/home/paperspace/Driverless_Car/Current_Model//model.ckpt"
+all_model_checkpoint_paths: "/home/paperspace/Driverless_Car/Current_Model//model.ckpt"
