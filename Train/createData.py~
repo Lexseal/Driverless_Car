@@ -1,0 +1,52 @@
+import numpy as np
+import random
+from skimage import io
+
+batchSize = 64
+
+def createSamples(subFileList):
+	imgArr = []
+	for i in range(int((len(subFileList)))):
+		name = subFileList[i][0]
+		classification = float(subFileList[i][1].split(" ")[0])
+		img = io.imread(name)
+		imgArr.append([np.array(img), np.array([classification])])
+	return imgArr
+
+def createTrainingSet(testSize = 0.01):
+	file = open("/home/paperspace/Driverless_Car/samples/log.txt", "r")
+	inputs = file.readlines()
+	fileListWithInputs = []
+	for i in range(len(inputs)):
+		fileListWithInputs.append(["/home/paperspace/Driverless_Car/samples/" + str(i) + ".jpg", inputs[i]])
+	#print(fileListWithInputs)
+	random.shuffle(fileListWithInputs)
+
+	#for i in range(int(len(inputs)*(1-testSize)/256)):
+	for i in range(int(55773/batchSize)):
+		start = i*batchSize
+		end = start+batchSize
+		if (end > len(inputs)*(1-testSize)):
+			end = int(len(inputs)*(1-testSize))
+		print(start, end)
+		sublist = fileListWithInputs[start:end]
+		data = createSamples(sublist)
+		x = np.array(data)[:,0]
+		y = np.array(data)[:,1]
+		np.save("/home/paperspace/Driverless_Car/Batches/trainX"+str(i), x)
+		np.save("/home/paperspace/Driverless_Car/Batches/trainY"+str(i), y)
+
+	start = int(len(inputs)*(1-testSize))
+	end = len(inputs)-1
+	print("test ", start, end)
+	data = createSamples(fileListWithInputs[start:end])
+
+	testX = np.array(data)[:,0]
+	testY = np.array(data)[:,1]
+
+	np.save("/home/paperspace/Driverless_Car/Batches/testX", testX)
+	np.save("/home/paperspace/Driverless_Car/Batches/testY", testY)
+
+	#return list(trainX), list(trainY), list(testX), list(testY)
+#trainX, trainY, testX, testY = createTrainingSet()
+createTrainingSet()
